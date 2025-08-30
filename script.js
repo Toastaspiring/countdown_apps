@@ -1,7 +1,13 @@
+// Import date-fns-tz for Vite
+import { fromZonedTime } from 'date-fns-tz';
+
 function calculateTimeRemaining(target, now) {
+    console.log('calculateTimeRemaining called:', { target, now });
     const difference = target - now;
+    console.log('Time difference (ms):', difference);
 
     if (difference <= 0) {
+        console.log('Countdown is over');
         return {
             days: 0,
             hours: 0,
@@ -16,6 +22,7 @@ function calculateTimeRemaining(target, now) {
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
+    console.log('Calculated time remaining:', { days, hours, minutes, seconds });
     return { days, hours, minutes, seconds, isOver: false };
 }
 
@@ -32,15 +39,19 @@ if (typeof document !== 'undefined') {
         let countdownInterval;
 
         async function startCountdown() {
+            console.log('Starting countdown...');
             const response = await fetch('config.json');
             const config = await response.json();
+            console.log('Loaded config:', config);
 
             const { eventName, targetDate, targetTimezone, targetTimeString } = config;
 
             document.querySelector('h1').textContent = eventName;
             targetTimeDisplay.textContent = `Counting down to the ${eventName} on ${targetTimeString}.`;
 
-            const target = dateFnsTz.zonedTimeToUtc(targetDate, targetTimezone);
+            // Use fromZonedTime instead of zonedTimeToUtc (updated API)
+            const target = fromZonedTime(targetDate, targetTimezone);
+            console.log('Target time calculated:', target);
 
             const requestNotificationPermission = () => {
                 if ('Notification' in window) {
@@ -56,6 +67,7 @@ if (typeof document !== 'undefined') {
 
             function updateCountdown() {
                 const now = new Date();
+                console.log('Updating countdown, current time:', now);
                 const { days, hours, minutes, seconds, isOver } = calculateTimeRemaining(target, now);
 
                 if (isOver) {

@@ -1,1 +1,1 @@
-# (countdown_app)[https://toastaspiring.github.io/countdown_app/]
+# [countdown_app](https://toastaspiring.github.io/countdown_app/)

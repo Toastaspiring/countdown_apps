@@ -1,6 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const { calculateTimeRemaining } = require('./script.js');
+const { zonedTimeToUtc } = require('date-fns-tz');
 
 // --- Test Cases ---
 
@@ -17,10 +18,11 @@ function testCountdownIsOver() {
 
 // Test 2: Countdown is active with a specific time difference
 function testSpecificTimeDifference() {
-    const target = new Date('2025-01-02T12:00:00Z');
-    const now = new Date('2025-01-01T10:00:00Z'); // 1 day and 2 hours before
+    const target = zonedTimeToUtc('2025-01-02T12:00:00', 'America/New_York'); // EST is UTC-5
+    const now = zonedTimeToUtc('2025-01-01T10:00:00', 'America/New_York');
     const result = calculateTimeRemaining(target, now);
 
+    // Difference is 1 day and 2 hours
     assert.strictEqual(result.isOver, false, 'Test Case 2 Failed: Countdown should be active.');
     assert.strictEqual(result.days, 1, 'Test Case 2 Failed: Days should be 1.');
     assert.strictEqual(result.hours, 2, 'Test Case 2 Failed: Hours should be 2.');
@@ -33,7 +35,8 @@ function testSpecificTimeDifference() {
 function testWithRealConfig() {
     const configRaw = fs.readFileSync('config.json');
     const config = JSON.parse(configRaw);
-    const target = new Date(config.targetDateUTC);
+
+    const target = zonedTimeToUtc(config.targetDate, config.targetTimezone);
 
     // A time exactly 1 day, 2 hours, 3 minutes, and 4 seconds before the target
     const now = new Date(target.getTime() - (1000 * 60 * 60 * 24 * 1) - (1000 * 60 * 60 * 2) - (1000 * 60 * 3) - (1000 * 4));

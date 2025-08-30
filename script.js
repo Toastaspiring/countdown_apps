@@ -35,12 +35,12 @@ if (typeof document !== 'undefined') {
             const response = await fetch('config.json');
             const config = await response.json();
 
-            const { eventName, targetDateUTC, targetTimeString } = config;
+            const { eventName, targetDate, targetTimezone, targetTimeString } = config;
 
             document.querySelector('h1').textContent = eventName;
             targetTimeDisplay.textContent = `Counting down to the ${eventName} on ${targetTimeString}.`;
 
-            const target = new Date(targetDateUTC);
+            const target = dateFnsTz.zonedTimeToUtc(targetDate, targetTimezone);
 
             const requestNotificationPermission = () => {
                 if ('Notification' in window) {

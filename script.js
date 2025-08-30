@@ -94,7 +94,7 @@ if (typeof document !== 'undefined') {
     });
 }
 
-// Export for testing in Node.js
+// Export for testing in Node.js whoa
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { calculateTimeRemaining };
 }

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to a New Start</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: #2b2b45;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            width: 700px; /* Fixed width for a static container */
+            text-align: center;
+            border: 2px solid #6c63ff;
+        }
+
+        h1 {
+            color: #e0e0e0;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            font-weight: 400;
+            color: #b0b0d0;
+            margin-bottom: 32px;
+        }
+
+        .countdown-display {
+            margin-top: 2rem;
+            font-weight: 700;
+        }
+
+        .countdown-display .time-unit {
+            display: flex; /* Use flexbox to center content */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 8px;
+            background-color: #3e3e5c;
+            border-radius: 8px;
+            border: 1px solid #4a4a6b;
+            width: 150px; /* Fixed box width */
+            height: 150px; /* Fixed box height */
+        }
+
+        .countdown-display .time-value {
+            font-size: 10vw; /* Scales with viewport width */
+            color: #6c63ff;
+            line-height: 1;
+        }
+
+        .time-label {
+            font-size: 16px;
+            text-transform: uppercase;
+            color: #b0b0d0;
+            margin-top: 8px;
+        }
+
+        .end-message {
+            font-size: 32px;
+            color: #4CAF50;
+            margin-top: 32px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center p-4">
+    <div class="container mx-auto p-8 bg-gray-800 rounded-xl shadow-lg border border-purple-500">
+        <h1 class="text-3xl font-bold text-purple-400">DPM app Beta Release</h1>
+        <p id="target-time-display" class="subtitle">Counting down to the DPM app Beta Release on August 30, 2025 at 4:00 PM CET.</p>
+
+        <div id="countdown-display" class="countdown-display">
+            <h2 class="text-xl font-bold mb-4">Time Remaining:</h2>
+            <div id="countdown-timer" class="flex justify-center items-center space-x-4">
+                <div class="time-unit">
+                    <div id="days" class="time-value">00</div>
+                    <div class="time-label">Days</div>
+                </div>
+                <div class="time-unit">
+                    <div id="hours" class="time-value">00</div>
+                    <div class="time-label">Hours</div>
+                </div>
+                <div class="time-unit">
+                    <div id="minutes" class="time-value">00</div>
+                    <div class="time-label">Minutes</div>
+                </div>
+                <div class="time-unit">
+                    <div id="seconds" class="time-value">00</div>
+                    <div class="time-label">Seconds</div>
+                </div>
+            </div>
+            <div id="countdown-message" class="mt-4 text-lg font-medium text-purple-400"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            const messageEl = document.getElementById('countdown-message');
+            const targetTimeDisplay = document.getElementById('target-time-display');
+
+            let countdownInterval;
+
+            // Hardcoded countdown target
+            const targetDateStr = '2025-08-30T16:00:00';
+            const targetTimezone = 'Europe/Paris';
+            const eventName = 'DPM app Beta Release';
+
+            // Function to request notification permission
+            const requestNotificationPermission = () => {
+                if ('Notification' in window) {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'denied') {
+                            console.log('Notification permission denied.');
+                        }
+                    });
+                }
+            };
+
+            // Call this on page load to prompt the user
+            requestNotificationPermission();
+
+            function updateCountdown() {
+                const now = new Date();
+                const target = new Date(new Date(targetDateStr).toLocaleString('en-US', { timeZone: targetTimezone }));
+
+                const difference = target - now;
+
+                if (difference <= 0) {
+                    clearInterval(countdownInterval);
+                    daysEl.textContent = '00';
+                    hoursEl.textContent = '00';
+                    minutesEl.textContent = '00';
+                    secondsEl.textContent = '00';
+                    messageEl.textContent = "The countdown is over!";
+                    messageEl.classList.add('end-message');
+                    targetTimeDisplay.textContent = "The event has started!";
+
+                    // Send a notification if permission is granted
+                    if (Notification.permission === 'granted') {
+                        new Notification('Countdown Finished!', {
+                            body: `The event "${eventName}" has arrived!`,
+                            icon: 'https://placehold.co/48x48/6c63ff/ffffff?text=🎉'
+                        });
+                    }
+
+                    return;
+                }
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                daysEl.textContent = String(days).padStart(2, '0');
+                hoursEl.textContent = String(hours).padStart(2, '0');
+                minutesEl.textContent = String(minutes).padStart(2, '0');
+                secondsEl.textContent = String(seconds).padStart(2, '0');
+
+                // Update the subtitle to show the target time in the user's timezone
+                const localTargetTime = target.toLocaleString();
+                messageEl.textContent = `Target time in your timezone is: ${localTargetTime}`;
+            }
+
+            // Initial call and set interval
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        });
+    </script>
+</body>
+</html>

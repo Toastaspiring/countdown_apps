@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown to a New Start</title>
+    <title>DPM app Beta Release</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,20 +26,21 @@
             padding: 2rem;
             border-radius: 1rem;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            width: 700px; /* Fixed width for a static container */
+            max-width: 1200px; /* Limits max width for very large screens */
+            width: 90%; /* Responsive width */
             text-align: center;
             border: 2px solid #6c63ff;
         }
 
         h1 {
             color: #e0e0e0;
-            font-size: 48px;
+            font-size: clamp(24px, 5vw, 48px); /* Responsive font size */
             font-weight: 700;
             margin-bottom: 8px;
         }
 
         .subtitle {
-            font-size: 20px;
+            font-size: clamp(16px, 3vw, 20px); /* Responsive font size */
             font-weight: 400;
             color: #b0b0d0;
             margin-bottom: 32px;
@@ -51,7 +52,7 @@
         }
 
         .countdown-display .time-unit {
-            display: flex; /* Use flexbox to center content */
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -59,18 +60,18 @@
             background-color: #3e3e5c;
             border-radius: 8px;
             border: 1px solid #4a4a6b;
-            width: 150px; /* Fixed box width */
-            height: 150px; /* Fixed box height */
+            width: clamp(80px, 18vw, 200px); /* Responsive width with min/max */
+            aspect-ratio: 1 / 1; /* Maintains a perfect square */
         }
 
         .countdown-display .time-value {
-            font-size: 10vw; /* Scales with viewport width */
+            font-size: clamp(3rem, 10vw, 8rem); /* Scales with viewport */
             color: #6c63ff;
             line-height: 1;
         }
 
         .time-label {
-            font-size: 16px;
+            font-size: clamp(12px, 2vw, 16px);
             text-transform: uppercase;
             color: #b0b0d0;
             margin-top: 8px;

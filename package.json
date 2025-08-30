@@ -1,0 +1,12 @@
+{
+  "name": "countdown-timer",
+  "version": "1.0.0",
+  "description": "A simple countdown timer.",
+  "main": "script.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

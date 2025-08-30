@@ -4,7 +4,8 @@
   "description": "A simple countdown timer.",
   "main": "script.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "build:dev": "vite build --mode development"
   },
   "keywords": [],
   "author": "",
